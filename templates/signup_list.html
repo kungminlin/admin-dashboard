@@ -6,8 +6,8 @@
 
   <title>Los Altos Hacks - Admin Dashboard</title>
 
-  <link rel="stylesheet" type="text/css" href="/assets/css/fonts.css">
-  <link rel="stylesheet" type="text/css" href="/assets/css/main.css">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/fonts.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/main.css') }}">
 </head>
 <body>
   <div class="panel">
@@ -124,47 +124,42 @@
           </div>
         </details>
       </div>
-      <?php
-      require_once("./conf.ini.php");
-
-      $curl = curl_init();
-
-      curl_setopt_array($curl, array(
-        CURLOPT_RETURNTRANSFER => 1,
-        CURLOPT_HTTPHEADER => array("Authorization: Bearer foobar"),
-        CURLOPT_URL => "$host/registration/v1/list",
-      ));
-
-      $result = json_decode(curl_exec($curl), true);
-
-      foreach ($result as $user) {
-        echo "<div class='attendees-row' data-id='" . $user['user_id'] . "'><details><summary><ul>";
-        echo "<li>" . ($user['acceptance_status'] == "none" ? "No" : "Yes") . "</li>";
-        echo "<li>" . $user['first_name'] . "</li>";
-        echo "<li>" . $user['surname'] . "</li>";
-        echo "<li>" . $user['email'] . "</li>";
-        echo "<li>" . $user['timestamp'] . "</li>";
-        echo "</ul></summary><div class='attendees-details'><ul>";
-        echo "<li class='gender'><b>Gender:</b> " . $user['gender'] . "</li>";
-        echo "<li class='age'><b>Age:</b> " . $user['age'] . "</li>";
-        echo "<li class='school'><b>School:</b> " . $user['school'] . "</li>";
-        echo "<li class='grade'><b>Grade:</b> " . $user['grade'] . "</li>";
-        echo "<li class='tel'><b>Phone Number:</b> " . $user['student_phone_number'] . "</li>";
-        echo "<li class='t-shirt'><b>T-Shirt Size:</b> " . $user['tshirt_size'] . "</li>";
-        echo "<li class='prev-hack'><b>Previous Hackathons:</b> " . $user['previous_hackathons'] . "</li>";
-        echo "</ul><ul>";
-        echo "<li class='g-name'><b>Guardian Name:</b> " . $user['guardian_name'] . "</li>";
-        echo "<li class='g-email'><b>Guardian Email:</b> " . $user['guardian_email'] . "</li>";
-        echo "<li class='g-tel'><b>Guardian Phone Number:</b> " . $user['guardian_phone_number'] . "</li>";
-        echo "</ul><ul>";
-        echo "<li class='github-user'><b>GitHub Username:</b> " . $user['github_username'] . "</li>";
-        echo "<li class='linkedin-prof'><b>LinkedIn Profile:</b> " . $user['linkedin_profile'] . "</li>";
-        echo "<li class='diet-restrict'><b>Dietary Restrictions:</b> " . $user['diestary_restrictions'] . "</li>";
-        echo "</ul></div></details></div>";
-      }
-
-      curl_close($curl);
-       ?>
+      {% for user in users %}
+        <div class="attendees-row">
+          <details>
+            <summary>
+              <ul>
+                <li>{{user['acceptance_status']}}</li><li>
+                {{user['first_name']}}</li><li>
+                {{user['surname']}}</li><li>
+                {{user['email']}}</li><li>
+                {{user['timestamp']}}</li>
+              </ul>
+            </summary>
+            <div class="attendees-details">
+              <ul>
+                <li class='gender'><b>Gender:</b> {{user['gender']}}</li>
+                <li class='age'><b>Age:</b> {{user['age']}}</li>
+                <li class='school'><b>School:</b> {{user['school']}}</li>
+                <li class='grade'><b>Grade:</b> {{user['grade']}}</li>
+                <li class='tel'><b>Phone Number:</b> {{user['student_phone_number']}}</li>
+                <li class='t-shirt'><b>T-Shirt Size:</b> {{user['tshirt_size']}}</li>
+                <li class='prev-hack'><b>Previous Hackathons:</b> {{user['previous_hackathons']}}</li>
+              </ul>
+              <ul>
+                <li class='g-name'><b>Guardian Name:</b> {{user['guardian_name']}}</li>
+                <li class='g-email'><b>Guardian Email:</b> {{user['guardian_email']}}</li>
+                <li class='g-tel'><b>Guardian Phone Number:</b> {{user['guardian_phone_number']}}</li>
+              </ul>
+              <ul>
+                <li class='github-user'><b>GitHub Username:</b> {{user['github_username']}}</li>
+                <li class='linkedin-prof'><b>LinkedIn Profile:</b> {{user['linkedin_profile']}}</li>
+                <li class='diet-restrict'><b>Dietary Restrictions:</b> {{user['diestary_restrictions']}}</li>
+              </ul>
+            </div>
+          </details>
+        </div>
+      {% endfor %}
     </div>
   </div>
 
